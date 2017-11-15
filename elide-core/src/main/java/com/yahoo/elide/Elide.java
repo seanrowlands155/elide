@@ -18,6 +18,7 @@ import com.yahoo.elide.core.exceptions.InternalServerErrorException;
 import com.yahoo.elide.core.exceptions.InvalidURLException;
 import com.yahoo.elide.core.exceptions.JsonPatchExtensionException;
 import com.yahoo.elide.core.exceptions.TransactionException;
+import com.yahoo.elide.core.exceptions.handlers.ErrorMapper;
 import com.yahoo.elide.extensions.JsonApiPatch;
 import com.yahoo.elide.extensions.PatchRequestScope;
 import com.yahoo.elide.generated.parsers.CoreLexer;
@@ -59,6 +60,7 @@ public class Elide {
     private final AuditLogger auditLogger;
     private final DataStore dataStore;
     private final JsonApiMapper mapper;
+    private final ErrorMapper errorMapper;
 
     /**
      * Instantiates a new Elide instance.
@@ -71,6 +73,7 @@ public class Elide {
         this.dataStore = elideSettings.getDataStore();
         this.dataStore.populateEntityDictionary(elideSettings.getDictionary());
         this.mapper = elideSettings.getMapper();
+        this.errorMapper = elideSettings.getErrorMapper();
     }
 
     /**
@@ -285,6 +288,12 @@ public class Elide {
         if (error instanceof InternalServerErrorException) {
             log.error("Internal Server Error", error);
         }
+
+        if (errorMapper.getHandleErrorFunctionForError(error.getClass()) != null)
+        {
+            errorMapper.getHandleErrorFunctionForError(error.getClass()).apply(error);
+        }
+
         return buildResponse(isVerbose ? error.getVerboseErrorResponse() : error.getErrorResponse());
     }
 

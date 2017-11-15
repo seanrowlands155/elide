@@ -11,6 +11,7 @@ import com.yahoo.elide.core.DataStore;
 import com.yahoo.elide.core.EntityDictionary;
 import com.yahoo.elide.core.HttpStatus;
 import com.yahoo.elide.core.RequestScope;
+import com.yahoo.elide.core.exceptions.handlers.ErrorMapper;
 import com.yahoo.elide.core.filter.dialect.DefaultFilterDialect;
 import com.yahoo.elide.core.filter.dialect.JoinFilterDialect;
 import com.yahoo.elide.core.filter.dialect.SubqueryFilterDialect;
@@ -41,6 +42,7 @@ public class ElideSettingsBuilder {
     private int defaultPageSize = Pagination.DEFAULT_PAGE_LIMIT;
     private boolean useFilterExpressions;
     private int updateStatusCode;
+    private ErrorMapper errorMapper;
 
     /**
      * A new builder used to generate Elide instances. Instantiates an {@link EntityDictionary} without
@@ -77,7 +79,13 @@ public class ElideSettingsBuilder {
                 defaultMaxPageSize,
                 defaultPageSize,
                 useFilterExpressions,
-                updateStatusCode);
+                updateStatusCode,
+                errorMapper);
+    }
+
+    public ElideSettingsBuilder withErrorMapper(ErrorMapper errorMapper) {
+        this.errorMapper = errorMapper;
+        return this;
     }
 
     public ElideSettingsBuilder withAuditLogger(AuditLogger auditLogger) {

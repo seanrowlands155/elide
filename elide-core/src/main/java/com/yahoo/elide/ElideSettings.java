@@ -9,6 +9,7 @@ import com.yahoo.elide.audit.AuditLogger;
 import com.yahoo.elide.core.DataStore;
 import com.yahoo.elide.core.EntityDictionary;
 import com.yahoo.elide.core.RequestScope;
+import com.yahoo.elide.core.exceptions.handlers.ErrorMapper;
 import com.yahoo.elide.core.filter.dialect.JoinFilterDialect;
 import com.yahoo.elide.core.filter.dialect.SubqueryFilterDialect;
 import com.yahoo.elide.jsonapi.JsonApiMapper;
@@ -35,4 +36,5 @@ public class ElideSettings {
     @Getter private final int defaultPageSize;
     @Getter private final boolean useFilterExpressions;
     @Getter private final int updateStatusCode;
+    @Getter private final ErrorMapper errorMapper;
 }
